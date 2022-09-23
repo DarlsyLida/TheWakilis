@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{request.user}}</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+
+</head>
+<body>
+  <h2 >The Wakilis Chat System</h2>
+  {% if request.user.is_authenticated %}
+
+    <div class="container clearfix">
+      <div class="people-list" id="people-list">
+        <div class="search">
+          <input type="text" placeholder="search" id="myInput" onkeyup="myFunction()" title="Type in a name" />
+          <i class="fa fa-search"></i>
+        </div>
+        <ul class="list" style="list-style: none;" id="myUL">
+          {% if request.user.is_staff == True %}
+          {% for user in users %}
+          <li class="clearfix" id={{user.username}}>
+            <img src="{% static 'media/ask.jpg' %}"  alt="avatar" style = "width: 40px; border-radius: 30px;" />
+            <div class="about">
+              <div class="name"><a href="{% url 'second_chat' username=user.username %}" style="text-decoration: none; color:chartreuse;">{{user.first_name}} {{user.last_name}}</a></div>
+              <div class="status">
+                <i class="fa fa-circle online"></i> online
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+
+
+          {% elif request.user.is_staff !=  True %}
+          {% for user in users %}
+          {% if user.is_staff == True %}
+          <li class="clearfix" id={{user.username}}>
+            <img src="{% static 'media/ask.jpg' %}"  alt="avatar" style = "width: 40px; border-radius: 30px;" />
+            <div class="about">
+              <div class="name"><a href="{% url 'second_chat' username=user.username %}" style="text-decoration: none; color:chartreuse;">{{user.first_name}} {{user.last_name}}</a></div>
+              <div class="status">
+                <i class="fa fa-circle online"></i> online
+              </div>
+            </div>
+          </li>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+
+        </ul>
+      </div>
+
+      <h2 style="padding: 10%;">Choose available Staff that fits your case</h2>
+        
+      </div> <!-- end container -->
+
+      {% else %}
+      <center>
+        <h1>We're eager to get to know you!</h1>
+        <h3 style="color: black;"> Please<a href="/login">Login</a> first to chat with Expert</h3> </center>
+      {% endif %}
+<!-- {{user.id|json_script:"json-username"}}
+{{request.user.username|json_script:"json-message-username"}} -->
+<script src="{% static 'js/app.js' %}"></script>
+</body>
+</html> 
